@@ -7,6 +7,7 @@ GameScene::GameScene() {}
 GameScene::~GameScene() { 
 	delete sprite_;
 	delete model_;
+	delete player_;
 }
 
 void GameScene::Initialize() {
@@ -19,6 +20,8 @@ void GameScene::Initialize() {
 	model_ = Model::Create();
 	worldTransform_.Initialize();
 	viewProjection_.Initialize();
+	player_ = new Player();
+	player_ -> Initialize(model_,textureHandle_,&viewProjection_);
 }
 
 void GameScene::Update() { 
@@ -26,6 +29,7 @@ void GameScene::Update() {
 	position.x += 2;
 	position.y += 2;
 	sprite_->SetPosition(position);
+	player_->Update();
 }
 
 void GameScene::Draw() {
@@ -40,7 +44,7 @@ void GameScene::Draw() {
 	/// <summary>
 	/// ここに背景スプライトの描画処理を追加できる
 	/// </summary>
-	sprite_->Draw();
+	/*sprite_->Draw();*/
 	// スプライト描画後処理
 	Sprite::PostDraw();
 	// 深度バッファクリア
@@ -54,7 +58,7 @@ void GameScene::Draw() {
 	/// <summary>
 	/// ここに3Dオブジェクトの描画処理を追加できる
 	/// </summary>
-	model_->Draw(worldTransform_, viewProjection_, textureHandle_);
+	player_->Draw();
 	// 3Dオブジェクト描画後処理
 	Model::PostDraw();
 #pragma endregion
