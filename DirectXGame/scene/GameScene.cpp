@@ -4,16 +4,29 @@
 
 GameScene::GameScene() {}
 
-GameScene::~GameScene() {}
+GameScene::~GameScene() { 
+	delete sprite_;
+	delete model_;
+}
 
 void GameScene::Initialize() {
 
 	dxCommon_ = DirectXCommon::GetInstance();
 	input_ = Input::GetInstance();
 	audio_ = Audio::GetInstance();
+	textureHandle_ = TextureManager::Load("black.png");
+	sprite_ = Sprite::Create(textureHandle_, {0, 0});
+	model_ = Model::Create();
+	worldTransform_.Initialize();
+	viewProjection_.Initialize();
 }
 
-void GameScene::Update() {}
+void GameScene::Update() { 
+	Vector2 position = sprite_->GetPosition();
+	position.x += 2;
+	position.y += 2;
+	sprite_->SetPosition(position);
+}
 
 void GameScene::Draw() {
 
@@ -27,7 +40,7 @@ void GameScene::Draw() {
 	/// <summary>
 	/// ここに背景スプライトの描画処理を追加できる
 	/// </summary>
-
+	sprite_->Draw();
 	// スプライト描画後処理
 	Sprite::PostDraw();
 	// 深度バッファクリア
@@ -41,7 +54,7 @@ void GameScene::Draw() {
 	/// <summary>
 	/// ここに3Dオブジェクトの描画処理を追加できる
 	/// </summary>
-
+	model_->Draw(worldTransform_, viewProjection_, textureHandle_);
 	// 3Dオブジェクト描画後処理
 	Model::PostDraw();
 #pragma endregion
